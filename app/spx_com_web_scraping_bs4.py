@@ -1,7 +1,6 @@
 """
     author : Enes Sönmez
 """
-
 # web scraping
 import requests
 from bs4 import BeautifulSoup
@@ -61,17 +60,17 @@ class SpxScraperBS:
         except Exception:
             return "None"
     
-    # The product availability percent is returned. (sold out product type / total listed product type)
+    # The product availability percent is returned. (on sale product type / total listed product type)
     def __get_product_availability(self, source):
         try:
             total_product_type = len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a"))
-            soldout_product_type = len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a", attrs={"class": "disabled"}))
-            return (soldout_product_type/total_product_type) * 100
+            onsale_product_type = total_product_type - len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a", attrs={"class": "disabled"}))
+            return (onsale_product_type/total_product_type) * 100
         except Exception:
             return "None"
 
     def scrape_products(self, filename):
-        # money to float convert
+        # for convert money to float
         locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
         data = list()
         urls = self.get_product_urls(filename)
