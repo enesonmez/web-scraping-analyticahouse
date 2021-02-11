@@ -32,6 +32,10 @@ class SpxScraperBS:
             return BeautifulSoup(r.content, "lxml")
         return False
 
+    """
+        The following 4 functions (brand, name, code, price) were not deliberately reduced to one function. Because there is 
+        a loss of speed due to parameter assignments. However, in the selenium example, the code is shortened.
+    """
     # The product brand is returned.
     def __get_product_brand(self, source):
         try:

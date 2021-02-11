@@ -24,30 +24,9 @@ class SpxScraperSelenium():
             sys.exit("Filename is wrong or not expected file!!!")
     
      # The product brand is returned. driver => Selenium webdriver object
-    def __get_product_brand(self, driver):
+    def __get_product_info(self, driver, classValue):
         try:
-            return driver.find_element_by_class_name("product__brand").text
-        except Exception:
-            return "None"
-    
-    # The product name is returned. 
-    def __get_product_name(self, driver):
-        try:
-            return driver.find_element_by_class_name("product__title").text
-        except Exception:
-            return "None"
-    
-    # The product code is returned.
-    def __get_product_code(self, driver):
-        try:
-            return driver.find_element_by_class_name("product__code").text
-        except Exception:
-            return "None"
-    
-    # The product price is returned.
-    def __get_product_price(self, driver):
-        try:
-            return driver.find_element_by_class_name("product__price").text
+            return driver.find_element_by_class_name(classValue).text
         except Exception:
             return "None"
     
@@ -72,10 +51,10 @@ class SpxScraperSelenium():
         driver.set_window_size(1400,600)
         for i, url in enumerate(urls):
             driver.get(url)
-            brand = self.__get_product_brand(driver)
-            name = self.__get_product_name(driver)
-            code = self.__get_product_code(driver)
-            price = locale.atof(self.__get_product_price(driver).replace("TL", "")) # for convert money to float
+            brand = self.__get_product_info(driver, "product__brand")
+            name = self.__get_product_info(driver, "product__title")
+            code = self.__get_product_info(driver, "product__code")
+            price = locale.atof(self.__get_product_info(driver, "product__price").replace("TL", "")) # for convert money to float
             availability_percent = self.__get_product_availability(driver)     
             data.append((brand, name, code, price, availability_percent))
         return data
