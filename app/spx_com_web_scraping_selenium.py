@@ -33,12 +33,17 @@ class SpxScraperSelenium():
      # The product availability percent is returned. (on sale product type / total listed product type)
     def __get_product_availability(self, driver):
         try:
-            total_product_type = len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_tag_name("a"))
-            onsale_product_type = total_product_type - len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_class_name("disabled"))
+            try:
+                if (driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_element_by_class_name("icon-ruler")):
+                    total_product_type = len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_tag_name("a")) - 1
+                    onsale_product_type = total_product_type - len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_class_name("disabled"))
+            except Exception:
+                total_product_type = len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_tag_name("a"))
+                onsale_product_type = total_product_type - len(driver.find_element_by_xpath("//div[@data-variant-key='integration_first_size']").find_elements_by_class_name("disabled"))
             return (onsale_product_type/total_product_type) * 100
         except Exception:
             return "None"
-    
+
     # A get request is sent to the url and the html source file is received.
     def scraper(self, filename):
         # for convert money to float

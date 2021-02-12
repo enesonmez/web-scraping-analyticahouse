@@ -67,8 +67,13 @@ class SpxScraperBS:
     # The product availability percent is returned. (on sale product type / total listed product type)
     def __get_product_availability(self, source):
         try:
-            total_product_type = len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a"))
-            onsale_product_type = total_product_type - len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a", attrs={"class": "disabled"}))
+            try:
+                if (len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find("a", attrs={"href": "#"}))):
+                    total_product_type = len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a")) -1
+                    onsale_product_type = total_product_type - len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a", attrs={"class": "disabled"}))
+            except Exception:
+                total_product_type = len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a"))
+                onsale_product_type = total_product_type - len(source.find("div", attrs={"data-variant-key": "integration_first_size"}).find_all("a", attrs={"class": "disabled"}))
             return (onsale_product_type/total_product_type) * 100
         except Exception:
             return "None"
